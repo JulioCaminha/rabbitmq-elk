@@ -1,11 +1,10 @@
-version: '3.7'
+version: '3.3'
 
 services:
   rabbitmq:
     build:
       context: rabbitmq/
     container_name: rabbitmq
-    hostname: rabbitmq
     user: root
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
@@ -19,11 +18,8 @@ services:
   metricbeat:
     build:
       context: metricbeat/
-    container_name: metricbeat
-    depends_on:
-      rabbitmq:
-        condition: service_started
     user: root
+    container_name: metricbeat
     volumes:
       - /proc:/hostfs/proc:ro
       - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
@@ -31,6 +27,10 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - metricbeat:/usr/share/metricbeat/data
       - ./metricbeat/config/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
+    command: sh -c 'metricbeat -e'
+    restart: on-failure
+    depends_on:
+      - rabbitmq
     networks:
       - elk
 
@@ -39,5 +39,4 @@ volumes:
   metricbeat:
 
 networks:
-  elk:
-    driver: bridge
+  elk: {}

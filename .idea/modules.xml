@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../portal_procurador/.idea/portal_procurador.iml" filepath="$PROJECT_DIR$/../portal_procurador/.idea/portal_procurador.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/rabbitmq-elk.iml" filepath="$PROJECT_DIR$/.idea/rabbitmq-elk.iml" />
     </modules>
   </component>
