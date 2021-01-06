@@ -1,0 +1,20 @@
+heartbeat.monitors:
+- type: http
+  schedule: '@every 5s'
+  id: service-status
+  name: Service Status
+  urls:
+    - http://rabbitmq:15672
+  check.response.status: 200
+
+name: "Hello"
+tags: ["production", "elk"]
+
+processors:
+  - add_cloud_metadata: ~
+  - add_docker_metadata: ~
+
+output.elasticsearch:
+  hosts: host.docker.internal:9200
+
+xpack.monitoring.enabled: true

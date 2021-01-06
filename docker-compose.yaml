@@ -18,8 +18,8 @@ services:
   metricbeat:
     build:
       context: metricbeat/
-    user: root
     container_name: metricbeat
+    user: root
     volumes:
       - /proc:/hostfs/proc:ro
       - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
@@ -33,6 +33,22 @@ services:
       - rabbitmq
     networks:
       - elk
+
+  heartbeat:
+    build:
+      context: heartbeat/
+    container_name: heartbeat
+    user: root
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./heartbeat/config/heartbeat.yml:/usr/share/heartbeat/heartbeat.yml:ro
+    command: sh -c 'heartbeat -e'
+    restart: on-failure
+    depends_on:
+      - rabbitmq
+    networks:
+      - elk
+
 
 volumes:
   rabbitmq-data:

@@ -38,3 +38,5 @@ processors:
 
 output.elasticsearch:
   hosts: host.docker.internal:9200
+
+xpack.monitoring.enabled: true
