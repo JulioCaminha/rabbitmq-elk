@@ -31,8 +31,6 @@ services:
     restart: on-failure
     depends_on:
       - rabbitmq
-    networks:
-      - elk
 
   heartbeat:
     build:
@@ -46,9 +44,6 @@ services:
     restart: on-failure
     depends_on:
       - rabbitmq
-    networks:
-      - elk
-
 
 volumes:
   rabbitmq-data:
