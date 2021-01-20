@@ -6,48 +6,22 @@ services:
       context: rabbitmq/
     container_name: rabbitmq
     user: root
+    environment:
+      - VIRTUAL_HOST=rabbitmq.hmapl2160.pge.ce.gov.br
+      - VIRTUAL_PORT=15672
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
     ports:
       - '15672:15672'
       - '5672:5672'
       - '25676:25676'
-    networks:
-      - elk
 
-  metricbeat:
-    build:
-      context: metricbeat/
-    container_name: metricbeat
-    user: root
+  reverse-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
     volumes:
-      - /proc:/hostfs/proc:ro
-      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
-      - /:/hostfs:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-      - metricbeat:/usr/share/metricbeat/data
-      - ./metricbeat/config/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
-    command: sh -c 'metricbeat -e'
-    restart: on-failure
-    depends_on:
-      - rabbitmq
-
-  heartbeat:
-    build:
-      context: heartbeat/
-    container_name: heartbeat
-    user: root
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./heartbeat/config/heartbeat.yml:/usr/share/heartbeat/heartbeat.yml:ro
-    command: sh -c 'heartbeat -e'
-    restart: on-failure
-    depends_on:
-      - rabbitmq
+      - /var/run/docker.sock:/tmp/docker.sock
 
 volumes:
   rabbitmq-data:
-  metricbeat:
-
-networks:
-  elk: {}
